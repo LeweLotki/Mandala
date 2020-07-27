@@ -1,21 +1,32 @@
 import pygame
+import math
 
 pygame.init()
+
+sqr=pygame.image.load('images/sqr.png')
+sqr=pygame.transform.scale(sqr, (10,10))
+
+def rotatePoint(centerPoint,point,angle):
+    angle = math.radians(angle)
+    temp_point = point[0]-centerPoint[0] , point[1]-centerPoint[1]
+    temp_point = ( temp_point[0]*math.cos(angle)-temp_point[1]*math.sin(angle) , temp_point[0]*math.sin(angle)+temp_point[1]*math.cos(angle))
+    temp_point = temp_point[0]+centerPoint[0] , temp_point[1]+centerPoint[1]
+    return temp_point
 
 class points:
     def __init__(self, positionx,positiony):
         self.x=positionx
         self.y=positiony
-    def render(self):
-        pygame.draw.rect(screen, bl, [self.x, self.y, 5, 5]) 
-        pygame.draw.rect(screen, bl, [800-self.x, self.y, 5, 5]) 
-        pygame.draw.rect(screen, bl, [self.x, 800-self.y, 5, 5]) 
-        pygame.draw.rect(screen, bl, [800-self.x, 800-self.y, 5, 5]) 
-        pygame.draw.rect(screen, bl, [self.y, self.x, 5, 5]) 
-        pygame.draw.rect(screen, bl, [800-self.y, self.x, 5, 5]) 
-        pygame.draw.rect(screen, bl, [self.y, 800-self.x, 5, 5]) 
-        pygame.draw.rect(screen, bl, [800-self.y, 800-self.x, 5, 5]) 
+        self.i=36
+    def render(self,Image):
+        while self.i>0:
+            a=int(rotatePoint((400,400),(self.x,self.y),(36-self.i)*10)[0])
+            b=int(rotatePoint((400,400),(self.x,self.y),(36-self.i)*10)[1])
+            screen.blit(Image,(a,b))
+            self.i-=1
+        self.i=36
 
+        
 points_list=[]
 
 bl = (  0,   0,   0)
@@ -45,14 +56,14 @@ while not done:
         if event.type == pygame.QUIT: 
             done=True
     
-    if pygame.mouse.get_pressed()[0] and mousex>400 and mousey>400:
+    if pygame.mouse.get_pressed()[0]: #and mousex>400 and mousey>400:
        #print(mousex,mousey)
        points_list.append(points(mousex,mousey))
     
     screen.fill(w)
     
     for n in points_list:
-        n.render()
+        n.render(sqr)
         
     pygame.display.flip()
     
