@@ -1,6 +1,8 @@
 import pygame
 import math
 
+n=int(input('Enter the quantity of axes: '))
+
 pygame.init()
 
 sqr=pygame.image.load('images/sqr.png')
@@ -14,17 +16,18 @@ def rotatePoint(centerPoint,point,angle):
     return temp_point
 
 class points:
-    def __init__(self, positionx,positiony):
+    def __init__(self, positionx,positiony,n):
         self.x=positionx
         self.y=positiony
-        self.i=36
+        self.i=n
+        self.n=n
     def render(self,Image):
         while self.i>0:
-            a=int(rotatePoint((400,400),(self.x,self.y),(36-self.i)*10)[0])
-            b=int(rotatePoint((400,400),(self.x,self.y),(36-self.i)*10)[1])
+            a=int(rotatePoint((400,400),(self.x,self.y),(self.n-self.i)*(360/self.n))[0])
+            b=int(rotatePoint((400,400),(self.x,self.y),(self.n-self.i)*(360/self.n))[1])
             screen.blit(Image,(a,b))
             self.i-=1
-        self.i=36
+        self.i=self.n
 
         
 points_list=[]
@@ -47,6 +50,7 @@ done=False
 clock=pygame.time.Clock()
 
 while not done:
+    key=pygame.key.get_pressed()
     mousex=pygame.mouse.get_pos()[0]
     mousey=pygame.mouse.get_pos()[1]
     key=pygame.key.get_pressed() 
@@ -56,14 +60,17 @@ while not done:
         if event.type == pygame.QUIT: 
             done=True
     
+    if key[pygame.K_c]:
+       points_list.clear()
+    
     if pygame.mouse.get_pressed()[0]: #and mousex>400 and mousey>400:
        #print(mousex,mousey)
-       points_list.append(points(mousex,mousey))
+       points_list.append(points(mousex,mousey,n))
     
     screen.fill(w)
     
-    for n in points_list:
-        n.render(sqr)
+    for val in points_list:
+        val.render(sqr)
         
     pygame.display.flip()
     
